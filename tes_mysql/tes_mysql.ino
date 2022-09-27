@@ -230,6 +230,6 @@ void loop()
     // Free resources
     http.end();
     }
-    //Send an HTTP POST request every 1 seconds
-    delay(1000);
+    //Send an HTTP POST request every 1seconds
+    delay(100);
 }
