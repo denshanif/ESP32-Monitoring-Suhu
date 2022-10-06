@@ -10,10 +10,10 @@ extern "C" {
 
 // Masukkan  identitas WiFi Anda di sini
 
-#define WIFI_SSID "INDOCENTER"
-#define WIFI_PASSWORD "segosambel"
+#define WIFI_SSID "APJII JATIM"
+#define WIFI_PASSWORD "apjii1111"
 
-const char* serverName = "http://192.168.32.212/post-esp-data.php";
+const char* serverName = "http://hanifal.my.id/post-esp-data.php";
 
 String apiKeyValue = "tPmAT5Ab3j7F9";
 
