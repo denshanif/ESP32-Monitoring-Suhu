@@ -10,6 +10,8 @@ extern "C" {
 
 // Masukkan  identitas WiFi Anda di sini
 
+const int buzzer = 17;
+
 #define WIFI_SSID "APJII JATIM"
 #define WIFI_PASSWORD "apjii1111"
 
@@ -22,8 +24,11 @@ String sensorLocation = "Radnet Server";
 
 // Masukkan  identitas MQTT Anda di sini
 
-#define MQTT_HOST ("broker.hivemq.com")
+#define MQTT_HOST IPAddress(202, 154, 57, 85)
 #define MQTT_PORT 1883
+
+#define MQTT_USERNAME "adminvps"
+#define MQTT_PASSWORD "surabaya"
 
 // Masukkan topik MQTT yang hendak Anda publish di sini
 
@@ -118,6 +123,9 @@ void setup()
   lcd.init();
   lcd.backlight();
 
+  pinMode(buzzer, OUTPUT);
+  digitalWrite(buzzer, LOW);
+
   mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void *)0, reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
   wifiReconnectTimer = xTimerCreate("wifiTimer", pdMS_TO_TICKS(2000), pdFALSE, (void *)0, reinterpret_cast<TimerCallbackFunction_t>(connectToWifi));
 
@@ -127,6 +135,7 @@ void setup()
   mqttClient.onDisconnect(onMqttDisconnect);
   mqttClient.onPublish(onMqttPublish);
   mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+  mqttClient.setCredentials(MQTT_USERNAME, MQTT_PASSWORD);
 
   connectToWifi();
 }
@@ -161,6 +170,11 @@ void loop()
     lcd.print(humidity.relative_humidity);
     lcd.setCursor(9,1);
     lcd.print("% rH");
+
+    if (temp.temperature >= 27.00) {
+      digitalWrite(buzzer, HIGH);
+      delay(1000);
+    }
 
     // Konversi data ke char
 
