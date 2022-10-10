@@ -10,10 +10,8 @@ extern "C" {
 
 // Masukkan  identitas WiFi Anda di sini
 
-const int buzzer = 17;
-
-#define WIFI_SSID "APJII JATIM"
-#define WIFI_PASSWORD "apjii1111"
+#define WIFI_SSID "INDOCENTER"
+#define WIFI_PASSWORD "segosambel"
 
 const char* serverName = "http://hanifal.my.id/post-esp-data.php";
 
@@ -123,9 +121,6 @@ void setup()
   lcd.init();
   lcd.backlight();
 
-  pinMode(buzzer, OUTPUT);
-  digitalWrite(buzzer, LOW);
-
   mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void *)0, reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
   wifiReconnectTimer = xTimerCreate("wifiTimer", pdMS_TO_TICKS(2000), pdFALSE, (void *)0, reinterpret_cast<TimerCallbackFunction_t>(connectToWifi));
 
@@ -171,23 +166,8 @@ void loop()
     lcd.setCursor(9,1);
     lcd.print("% rH");
 
-    if (temp.temperature >= 27.00) {
-      digitalWrite(buzzer, HIGH);
-      delay(1000);
-    }
-
-    // Konversi data ke char
-
-    char tempChar[10];
-    dtostrf(temp.temperature, 6, 2, tempChar);
-
-    char humidityChar[10];
-    dtostrf(humidity.relative_humidity, 6, 2, humidityChar);
-
-    // Publish data ke MQTT Broker
-
-    mqttClient.publish(MQTT_TEMP_TOPIC, 0, false, tempChar);
-    mqttClient.publish(MQTT_HUMIDITY_TOPIC, 0, false, humidityChar);
+    uint16_t packetIdPub1 = mqttClient.publish(MQTT_TEMP_TOPIC, 1, true, String(temp.temperature).c_str());
+    uint16_t packetIdPub2 = mqttClient.publish(MQTT_HUMIDITY_TOPIC, 1, true, String(humidity.relative_humidity).c_str());
 
     // Menampilkan data ke Serial Monitor
 
